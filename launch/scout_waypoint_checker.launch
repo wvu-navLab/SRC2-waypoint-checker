@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+  <group ns="scout_1">
+    <node name="waypoint_checker" pkg="waypoint_checker" type="waypoint_checker_node" output="screen"/>
+  </group>
+
+</launch>

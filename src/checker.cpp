@@ -32,7 +32,7 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& cloud_msg)
   // change frame of the point cloud
 
   try{
-  	Tt2_v = tfBuffer.lookupTransform("odom", (*cloud_msg).header.frame_id, ros::Time(0));//, ros::Duration(1.0));
+  	Tt2_v = tfBuffer.lookupTransform("scout_1_tf/odom", (*cloud_msg).header.frame_id, ros::Time(0));//, ros::Duration(1.0));
 	//Tt2_v = tfBuffer.lookupTransform("scout_1_tf/base_footprint", (*cloud_msg).header.frame_id, ros::Time(0));
   	tf2::doTransform(*cloud_msg, trns_cloud_msg, Tt2_v);
 
