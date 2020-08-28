@@ -32,7 +32,7 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& cloud_msg)
   // change frame of the point cloud
 
   try{
-  	Tt2_v = tfBuffer.lookupTransform("odom", (*cloud_msg).header.frame_id, ros::Time(0), ros::Duration(1.0));
+  	Tt2_v = tfBuffer.lookupTransform("odom", (*cloud_msg).header.frame_id, ros::Time(0));//, ros::Duration(1.0));
 	//Tt2_v = tfBuffer.lookupTransform("scout_1_tf/base_footprint", (*cloud_msg).header.frame_id, ros::Time(0));
   	tf2::doTransform(*cloud_msg, trns_cloud_msg, Tt2_v);
 
@@ -53,11 +53,11 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& cloud_msg)
 
 bool serviceCallback(waypoint_checker::CheckCollision::Request &req, waypoint_checker::CheckCollision::Response &resp)
 {
-		
+
 	ROS_INFO("Service Called");
 
 	resp.collision = false;
- 
+
         ROS_INFO("Cloud Size: %d", (int)cloud->size());
 
         if (cloud->size() == 0)  // If there is no point in the cloud, there is no collision
@@ -81,7 +81,7 @@ bool serviceCallback(waypoint_checker::CheckCollision::Request &req, waypoint_ch
 	int j = 0;
 
   	for (std::vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin (); it != cluster_indices.end (); ++it){ // iteract over all clusters
-	
+
 		// each cluster is represented by it
       		pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_cluster (new pcl::PointCloud<pcl::PointXYZ>);
 
@@ -100,19 +100,19 @@ bool serviceCallback(waypoint_checker::CheckCollision::Request &req, waypoint_ch
 
 		// Find the radius of the cluster -> We assume it is symetric. A rock, for example.
 		float dx = max_pt[0]-min_pt[0];
-		float dy = max_pt[1]-min_pt[1];		
+		float dy = max_pt[1]-min_pt[1];
 		float radius = dx>dy?dx/2.0:dy/2.0; // We may need to increase the radio a bit to consider the size of the robot
-                
+
 
                 if ( (req.x > (centroid[0] - radius)) && (req.x < (centroid[0] + radius)) && (req.y > (centroid[1] - radius)) && (req.y < (centroid[1] + radius)) ){
-			resp.collision = true;  
-			return true;            
+			resp.collision = true;
+			return true;
 		}
-		
+
 	}
 
 	return true;
-		
+
 }
 
 
