@@ -28,11 +28,13 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& cloud_msg)
   tf2_ros::Buffer tfBuffer;
   geometry_msgs::TransformStamped Tt2_v;
   sensor_msgs::PointCloud2 trns_cloud_msg;
+  tf2_ros::TransformListener tf2_listener(tfBuffer);
 
   // change frame of the point cloud
 
   try{
-  	Tt2_v = tfBuffer.lookupTransform("scout_1_tf/odom", (*cloud_msg).header.frame_id, ros::Time(0));//, ros::Duration(1.0));
+
+  	Tt2_v = tfBuffer.lookupTransform("scout_1_tf/odom", (*cloud_msg).header.frame_id, ros::Time(0), ros::Duration(1.0));
 	//Tt2_v = tfBuffer.lookupTransform("scout_1_tf/base_footprint", (*cloud_msg).header.frame_id, ros::Time(0));
   	tf2::doTransform(*cloud_msg, trns_cloud_msg, Tt2_v);
 
@@ -46,7 +48,7 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& cloud_msg)
   } // try
   catch (tf::TransformException ex){
   	ROS_ERROR("%s",ex.what());
-  	ros::Duration(0.5).sleep();
+  	ros::Duration(0.1).sleep();
   } // catch
 }
 
@@ -124,7 +126,7 @@ int main (int argc, char** argv)
   ros::NodeHandle nh;
 
   // Create a ROS subscriber for the input point cloud
-  ros::Subscriber sub = nh.subscribe ("/output", 1, cloud_cb);
+  ros::Subscriber sub = nh.subscribe ("inference/point_cloud", 1, cloud_cb);
 
   // Create a ROS service for the input point cloud
   ros::ServiceServer service = nh.advertiseService("waypoint_checker", serviceCallback);

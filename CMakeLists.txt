@@ -147,10 +147,11 @@ include_directories(
 
 add_executable(waypoint_checker_node src/checker.cpp)
 target_link_libraries(waypoint_checker_node ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+add_dependencies(waypoint_checker_node waypoint_checker_generate_messages_cpp)
 
 add_executable(test_service src/test_service.cpp)
 target_link_libraries(test_service ${catkin_LIBRARIES})
-
+#add_dependencies(test_service waypoint_checker_generate_messages_cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
