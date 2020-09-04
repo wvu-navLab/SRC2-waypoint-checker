@@ -20,6 +20,9 @@
 #include <math.h>
 #include <waypoint_checker/CheckCollision.h>
 
+std::string robot_name;
+std::string odometry_frame_id;
+std::string odometry_child_frame_id;
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
 
@@ -34,7 +37,7 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& cloud_msg)
 
   try{
 
-  	Tt2_v = tfBuffer.lookupTransform("scout_1_tf/odom", (*cloud_msg).header.frame_id, ros::Time(0), ros::Duration(1.0));
+  	Tt2_v = tfBuffer.lookupTransform(odometry_frame_id, (*cloud_msg).header.frame_id, ros::Time(0), ros::Duration(1.0));
 	//Tt2_v = tfBuffer.lookupTransform("scout_1_tf/base_footprint", (*cloud_msg).header.frame_id, ros::Time(0));
   	tf2::doTransform(*cloud_msg, trns_cloud_msg, Tt2_v);
 
@@ -121,16 +124,30 @@ bool serviceCallback(waypoint_checker::CheckCollision::Request &req, waypoint_ch
 
 int main (int argc, char** argv)
 {
-  // Initialize ROS
-  ros::init (argc, argv, "waypoint_checker");
-  ros::NodeHandle nh;
+	// Initialize ROS
+	ros::init (argc, argv, "waypoint_checker");
+	ros::NodeHandle nh;
+	std::string node_name = "waypoint_checker_node";
 
-  // Create a ROS subscriber for the input point cloud
-  ros::Subscriber sub = nh.subscribe ("inference/point_cloud", 1, cloud_cb);
+	if(ros::param::get(node_name+"/odometry_frame_id",odometry_frame_id)==false)
+	{
+		ROS_FATAL("No parameter 'odometry_frame_id' specified");
+		ros::shutdown();
+		exit(1);
+	}
+	if(ros::param::get(node_name+"/odometry_child_frame_id",odometry_child_frame_id)==false)
+	{
+		ROS_FATAL("No parameter 'odometry_child_frame_id' specified");
+		ros::shutdown();
+		exit(1);
+	}
 
-  // Create a ROS service for the input point cloud
-  ros::ServiceServer service = nh.advertiseService("waypoint_checker", serviceCallback);
+	// Create a ROS subscriber for the input point cloud
+	ros::Subscriber sub = nh.subscribe ("inference/point_cloud", 1, cloud_cb);
 
-  // Spin
-  ros::spin ();
+	// Create a ROS service for the input point cloud
+	ros::ServiceServer service = nh.advertiseService("waypoint_checker", serviceCallback);
+
+	// Spin
+	ros::spin ();
 }
