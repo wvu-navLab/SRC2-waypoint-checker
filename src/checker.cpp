@@ -142,13 +142,8 @@ int main (int argc, char** argv)
 		exit(1);
 	}
 
-<<<<<<< HEAD
-  // Create a ROS subscriber for the input point cloud
-  ros::Subscriber sub = nh.subscribe ("inference/point_cloud_filtered", 1, cloud_cb);
-=======
-	// Create a ROS subscriber for the input point cloud
-	ros::Subscriber sub = nh.subscribe ("inference/point_cloud", 1, cloud_cb);
->>>>>>> 1a1bfe30a0a6f32e885b3afd083f11a034350c48
+        // Create a ROS subscriber for the input point cloud
+	ros::Subscriber sub = nh.subscribe ("inference/point_cloud_filtered", 1, cloud_cb);
 
 	// Create a ROS service for the input point cloud
 	ros::ServiceServer service = nh.advertiseService("waypoint_checker", serviceCallback);
