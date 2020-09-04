@@ -2,9 +2,13 @@
 <launch>
 
   <group ns="scout_1">
-    <node name="waypoint_checker" pkg="waypoint_checker" type="waypoint_checker_node" output="screen"/>
-    
-    <rosparam command="load" file="$(find waypoint_checker)/config/scout.yaml"/>
+    <node name="waypoint_checker_node" pkg="waypoint_checker" type="waypoint_checker_node" output="screen">
+      <rosparam
+       command="load"
+       file="$(find waypoint_checker)/config/scout.yaml"
+       subst_value="true"
+     />
+    </node>
   </group>
 
 </launch>
