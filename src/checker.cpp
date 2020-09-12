@@ -81,7 +81,7 @@ bool serviceCallback(waypoint_checker::CheckCollision::Request &req, waypoint_ch
   	ec.setMinClusterSize (150);
   	ec.extract (cluster_indices); // Does the work
 
-	ROS_INFO("Number of clusters: %d", (int)cluster_indices.size());
+	// ROS_INFO("Number of clusters: %d", (int)cluster_indices.size());
 
 	int j = 0;
 
