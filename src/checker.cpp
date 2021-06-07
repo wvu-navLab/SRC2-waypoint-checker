@@ -128,6 +128,14 @@ int main (int argc, char** argv)
 	ros::init (argc, argv, "waypoint_checker");
 	ros::NodeHandle nh;
 	std::string node_name = "waypoint_checker_node";
+	std::string robot_name;
+
+	if(ros::param::get("robot_name",robot_name)==false)
+	{
+		ROS_FATAL("No parameter 'odometry_frame_id' specified");
+		ros::shutdown();
+		exit(1);
+	}
 
 	if(ros::param::get(node_name+"/odometry_frame_id",odometry_frame_id)==false)
 	{
@@ -135,12 +143,14 @@ int main (int argc, char** argv)
 		ros::shutdown();
 		exit(1);
 	}
+	odometry_frame_id = robot_name + odometry_frame_id;
 	if(ros::param::get(node_name+"/odometry_child_frame_id",odometry_child_frame_id)==false)
 	{
 		ROS_FATAL("No parameter 'odometry_child_frame_id' specified");
 		ros::shutdown();
 		exit(1);
 	}
+	odometry_child_frame_id = robot_name + odometry_child_frame_id;
 
         // Create a ROS subscriber for the input point cloud
 	ros::Subscriber sub = nh.subscribe ("inference/point_cloud_filtered", 1, cloud_cb);
