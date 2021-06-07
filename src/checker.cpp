@@ -153,7 +153,7 @@ int main (int argc, char** argv)
 	odometry_child_frame_id = robot_name + odometry_child_frame_id;
 
         // Create a ROS subscriber for the input point cloud
-	ros::Subscriber sub = nh.subscribe ("inference/point_cloud_filtered", 1, cloud_cb);
+	ros::Subscriber sub = nh.subscribe ("inference/point_cloud", 1, cloud_cb);
 
 	// Create a ROS service for the input point cloud
 	ros::ServiceServer service = nh.advertiseService("waypoint_checker", serviceCallback);
