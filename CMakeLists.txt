@@ -79,7 +79,7 @@ add_service_files(
 # )
 generate_messages(
    DEPENDENCIES
-   std_msgs	
+   std_msgs
  )
 
 ################################################
@@ -208,7 +208,16 @@ add_dependencies(waypoint_checker_node waypoint_checker_generate_messages_cpp)
 #   # myfile2
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
+install(TARGETS ${PROJECT_NAME}_node
+   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ )
+install(DIRECTORY launch/
+   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+   PATTERN ".svn" EXCLUDE)
 
+   install(DIRECTORY config/
+       DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
+       PATTERN ".svn" EXCLUDE)
 #############
 ## Testing ##
 #############
